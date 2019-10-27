@@ -4,14 +4,14 @@
       "id": 1,
       "name": "Tarefa 1",
       "completed": true,
-      "toDate":"2019-10-28",
+      "toDate":"2019-10-27",
       "order":0 
     }, 
     {
       "id": 2,
       "name": "Tarefa 2",
       "completed": true,
-      "toDate":"2019-10-28",
+      "toDate":"2019-10-27",
       "order":1 
     },
     { 
