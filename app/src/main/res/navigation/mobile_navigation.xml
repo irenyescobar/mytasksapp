@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_today">
+
+    <fragment
+        android:id="@+id/navigation_today"
+        android:name="com.irenyescobar.mytasksapp.ui.task.list.today.TodayFragment"
+        android:label="@string/title_today"
+        tools:layout="@layout/fragment_tasks" />
+
+    <fragment
+        android:id="@+id/navigation_pending"
+        android:name="com.irenyescobar.mytasksapp.ui.task.list.pending.PendingFragment"
+        android:label="@string/title_pending"
+        tools:layout="@layout/fragment_tasks" />
+
+    <fragment
+        android:id="@+id/navigation_completed"
+        android:name="com.irenyescobar.mytasksapp.ui.task.list.completed.CompletedFragment"
+        android:label="@string/title_completed"
+        tools:layout="@layout/fragment_tasks" />
+</navigation>
