@@ -5,34 +5,35 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.irenyescobar.mytasksapp.R
 import com.irenyescobar.mytasksapp.data.room.entities.Task
-import com.irenyescobar.mytasksapp.repositories.TaskRepository
-import com.irenyescobar.mytasksapp.ui.base.viewmodels.BaseListTaskViewModel
-import com.irenyescobar.mytasksapp.ui.interfaces.OpenTaskInterface
 import com.irenyescobar.mytasksapp.ui.adapters.TaskListAdapter
-import com.irenyescobar.mytasksapp.ui.interfaces.WallpaperSettingsInterface
-import com.irenyescobar.mytasksapp.ui.listeners.CheckedChangeListener
-import com.irenyescobar.mytasksapp.ui.listeners.SelectedListener
-import com.irenyescobar.mytasksapp.ui.interfaces.ViewInteractionInterface
-import com.irenyescobar.mytasksapp.ui.listeners.SaveTaskListener
+import com.irenyescobar.mytasksapp.ui.base.viewmodels.BaseListTaskViewModel
 import com.irenyescobar.mytasksapp.ui.helpers.TaskViewModelFactory
 import com.irenyescobar.mytasksapp.ui.helpers.TaskViewModelType
+import com.irenyescobar.mytasksapp.ui.interfaces.OpenTaskInterface
+import com.irenyescobar.mytasksapp.ui.listeners.CheckedChangeListener
+import com.irenyescobar.mytasksapp.ui.listeners.SelectedListener
 import com.irenyescobar.mytasksapp.ui.task.list.today.TodayViewModel
 import com.irenyescobar.mytasksapp.utils.customApp
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.irenyescobar.mytasksapp.ui.adapters.ItemMoveCallback
+import com.irenyescobar.mytasksapp.ui.adapters.StartDragListener
+
 
 abstract class BaseListTaskFragment(@TaskViewModelType viewModelType: Int): BaseSaveTaskFragment(viewModelType),
+    StartDragListener,
     SelectedListener<Task>,
     CheckedChangeListener<Task>{
 
     private lateinit var viewModel: BaseListTaskViewModel
     private lateinit var adapter: TaskListAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var touchHelper:ItemTouchHelper
 
     private var openTaskFunction: OpenTaskInterface? = null
 
@@ -67,7 +68,11 @@ abstract class BaseListTaskFragment(@TaskViewModelType viewModelType: Int): Base
     }
 
     fun setup(){
-        adapter = TaskListAdapter(context!!,this,this)
+        adapter = TaskListAdapter(context!!,this,this,this)
+        val callback = ItemMoveCallback(adapter)
+        touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(recyclerView)
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context!!)
 
@@ -85,8 +90,8 @@ abstract class BaseListTaskFragment(@TaskViewModelType viewModelType: Int): Base
         })
     }
 
-    fun enableView(enable: Boolean){
-        recyclerView.isEnabled = enable
+    override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
+        touchHelper.startDrag(viewHolder)
     }
 
     override fun onSelected(item: Task) {
@@ -95,17 +100,6 @@ abstract class BaseListTaskFragment(@TaskViewModelType viewModelType: Int): Base
 
     override fun onCheckedChange(item: Task) {
         viewInteractions?.showProgress()
-        enableView(false)
         viewModel.save(item)
-    }
-
-    override fun onSaveTaskSuccess() {
-        super.onSaveTaskSuccess()
-        enableView(true)
-    }
-
-    override fun onSaveTaskError(message: String) {
-        super.onSaveTaskError(message)
-        enableView(true)
     }
 }
