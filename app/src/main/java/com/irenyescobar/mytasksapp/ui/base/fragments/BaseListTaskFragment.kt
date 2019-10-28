@@ -85,27 +85,12 @@ abstract class BaseListTaskFragment(@TaskViewModelType viewModelType: Int): Base
         })
     }
 
-    fun enableView(enable: Boolean){
-        recyclerView.isEnabled = enable
-    }
-
     override fun onSelected(item: Task) {
         openTaskFunction?.openTask(item)
     }
 
     override fun onCheckedChange(item: Task) {
         viewInteractions?.showProgress()
-        enableView(false)
         viewModel.save(item)
-    }
-
-    override fun onSaveTaskSuccess() {
-        super.onSaveTaskSuccess()
-        enableView(true)
-    }
-
-    override fun onSaveTaskError(message: String) {
-        super.onSaveTaskError(message)
-        enableView(true)
     }
 }
