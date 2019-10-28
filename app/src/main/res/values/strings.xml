@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Tarefas</string>
+    <string name="title_task_activity">Tarefa</string>
+    <string name="title_today">Para hoje</string>
+    <string name="title_pending">Pendentes</string>
+    <string name="title_completed">Realizadas</string>
+    <string name="data_not_imported">Não foi possível importar os dados</string>
+    <string name="title_add_task">Adicionar tarefa</string>
+    <string name="to_date_text">Definir Data</string>
+    <string name="task_name_hint">Qual é a tarefa?</string>
+    <string name="task_toDate_null_message">Sem data</string>
+</resources>
