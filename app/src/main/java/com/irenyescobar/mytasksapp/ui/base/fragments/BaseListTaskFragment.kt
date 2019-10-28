@@ -20,14 +20,20 @@ import com.irenyescobar.mytasksapp.ui.listeners.CheckedChangeListener
 import com.irenyescobar.mytasksapp.ui.listeners.SelectedListener
 import com.irenyescobar.mytasksapp.ui.task.list.today.TodayViewModel
 import com.irenyescobar.mytasksapp.utils.customApp
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.irenyescobar.mytasksapp.ui.adapters.ItemMoveCallback
+import com.irenyescobar.mytasksapp.ui.adapters.StartDragListener
+
 
 abstract class BaseListTaskFragment(@TaskViewModelType viewModelType: Int): BaseSaveTaskFragment(viewModelType),
+    StartDragListener,
     SelectedListener<Task>,
     CheckedChangeListener<Task>{
 
     private lateinit var viewModel: BaseListTaskViewModel
     private lateinit var adapter: TaskListAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var touchHelper:ItemTouchHelper
 
     private var openTaskFunction: OpenTaskInterface? = null
 
@@ -62,7 +68,11 @@ abstract class BaseListTaskFragment(@TaskViewModelType viewModelType: Int): Base
     }
 
     fun setup(){
-        adapter = TaskListAdapter(context!!,this,this)
+        adapter = TaskListAdapter(context!!,this,this,this)
+        val callback = ItemMoveCallback(adapter)
+        touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(recyclerView)
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context!!)
 
@@ -78,6 +88,10 @@ abstract class BaseListTaskFragment(@TaskViewModelType viewModelType: Int): Base
         viewModel.data.observe(this, Observer { data ->
             data?.let { adapter.setData(it) }
         })
+    }
+
+    override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
+        touchHelper.startDrag(viewHolder)
     }
 
     override fun onSelected(item: Task) {
