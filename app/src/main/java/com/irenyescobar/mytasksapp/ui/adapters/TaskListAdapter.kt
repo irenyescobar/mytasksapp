@@ -44,12 +44,10 @@ class TaskListAdapter (
 
             rowView.tag = current
 
-            rowView.setOnTouchListener(View.OnTouchListener { v, event ->
-                if (event.action == MotionEvent.ACTION_DOWN) {
-                    startDragListener.requestDrag(holder)
-                }
-                false
-            })
+            rowView.setOnLongClickListener{
+                startDragListener.requestDrag(holder)
+                true
+            }
 
             rowView.setOnClickListener{
                 val item = it.tag as Task
